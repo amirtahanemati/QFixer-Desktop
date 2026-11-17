@@ -1,0 +1,77 @@
+# Node.js & Frontend
+node_modules/
+dist/
+dist-ssr/
+build/
+*.local
+.npm/
+.pnpm-debug.log*
+
+# Rust & Cargo
+target/
+**/*.rs.bk
+Cargo.lock.temp
+
+# Tauri
+apps/desktop/src-tauri/target/
+
+# Python & Engine
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# SQLite & Local data
+*.sqlite
+*.sqlite3
+*.db
+local_cache/
+temp_frames/
+temp_processing/
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# Large AI model binaries (use model registry and offline downloads)
+models/*.onnx
+models/*.pt
+models/*.bin
+models/*.safetensors
+!models/registry.json

@@ -1,0 +1,34 @@
+{
+  "app": {
+    "title": "QFixer Desktop",
+    "tagline": "Specialized Scientific & Educational Image Restoration"
+  },
+  "nav": {
+    "home": "Home",
+    "workspace": "Workspace",
+    "batch": "Batch Processing",
+    "history": "History",
+    "settings": "Settings"
+  },
+  "status": {
+    "ready": "Ready",
+    "processing": "Processing...",
+    "idle": "Idle",
+    "hardware": "Hardware:",
+    "engine": "Engine:"
+  },
+  "actions": {
+    "import_image": "Import Image",
+    "export_image": "Export Image",
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "apply": "Apply Changes",
+    "toggle_theme": "Toggle Theme",
+    "switch_lang": "Switch Language"
+  },
+  "phase0": {
+    "badge": "Phase 0: Base Infrastructure",
+    "status_title": "QFixer Desktop skeleton initialized successfully",
+    "status_desc": "i18n, Dark/Light tokens, modular architecture, and IPC contracts are configured."
+  }
+}

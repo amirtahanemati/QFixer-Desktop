@@ -1,0 +1,63 @@
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("./fonts/Vazirmatn-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("./fonts/Vazirmatn-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light Theme */
+    --background: #F7F8FA;
+    --background-secondary: #FFFFFF;
+    --panel: #F0F2F5;
+    --accent: #789E00;
+    --accent-hover: #678700;
+    --accent-foreground: #FFFFFF;
+    --foreground: #20232B;
+    --muted: #E2E5EA;
+    --muted-foreground: #676D7C;
+    --border: #DDE1E8;
+  }
+
+  .dark {
+    /* Dark Theme */
+    --background: #101114;
+    --background-secondary: #181A20;
+    --panel: #20232B;
+    --accent: #C7FF3D;
+    --accent-hover: #D6FF66;
+    --accent-foreground: #101114;
+    --foreground: #F7F8FA;
+    --muted: #282C37;
+    --muted-foreground: #9297A2;
+    --border: #2D323E;
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Vazirmatn", system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    user-select: none;
+    -webkit-user-select: none;
+    overflow: hidden;
+  }
+}

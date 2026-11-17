@@ -1,0 +1,50 @@
+{
+  "registry_version": "1.0.0",
+  "models": [
+    {
+      "id": "shadow-remover-base",
+      "name": "مدل پایه‌ای حذف سایه و تصحیح نور",
+      "category": "shadow_removal",
+      "version": "1.0.0",
+      "format": "onnx",
+      "size_bytes": 15420000,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "runtime": "onnxruntime",
+      "preferred_provider": "cuda",
+      "fallback_provider": "cpu",
+      "is_optional": true,
+      "installed": false,
+      "license": "Apache-2.0"
+    },
+    {
+      "id": "text-region-detector",
+      "name": "مدل تفکیک هوشمند نواحی متنی و فرمول‌ها",
+      "category": "content_detection",
+      "version": "1.0.0",
+      "format": "onnx",
+      "size_bytes": 22100000,
+      "sha256": "4b227777d4dd1fc61c6f884f48641d02b4d121d3fd328cb08b5531fcacdabf8a",
+      "runtime": "onnxruntime",
+      "preferred_provider": "cuda",
+      "fallback_provider": "cpu",
+      "is_optional": true,
+      "installed": false,
+      "license": "MIT"
+    },
+    {
+      "id": "scientific-inpainting",
+      "name": "مدل بازسازی متناسب با محتوای علمی و خطوط",
+      "category": "restoration",
+      "version": "1.0.0",
+      "format": "onnx",
+      "size_bytes": 35700000,
+      "sha256": "ef2d127de37b942baad06145e54b0c619a1f22327b2ebbcfbec78f5564afe39d",
+      "runtime": "onnxruntime",
+      "preferred_provider": "cuda",
+      "fallback_provider": "cpu",
+      "is_optional": true,
+      "installed": false,
+      "license": "Apache-2.0"
+    }
+  ]
+}
