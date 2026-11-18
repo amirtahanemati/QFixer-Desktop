@@ -23,6 +23,8 @@ from qfixer_engine.worker.protocol import (
 import cv2
 from qfixer_engine.processing.pipeline import execute_pipeline
 from qfixer_engine.analysis.content_detector import analyze_scientific_content
+from qfixer_engine.hardware.detector import detect_system_hardware
+from qfixer_engine.ai.onnx_runner import ModelRegistryManager
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("qfixer_worker")
@@ -61,6 +63,10 @@ class EngineWorker:
         os.makedirs(self.cache_dir, exist_ok=True)
         self.initialized = True
 
+        hardware_info = detect_system_hardware()
+        model_mgr = ModelRegistryManager()
+        models_status = model_mgr.list_models_status()
+
         res = make_result_message(
             request_id,
             {
@@ -68,11 +74,14 @@ class EngineWorker:
                 "backend": self.preferred_backend,
                 "cache_dir": self.cache_dir,
                 "pid": os.getpid(),
+                "hardware": hardware_info,
+                "models": models_status,
             },
         )
         self.send_message(res)
 
     def handle_health_check(self, request_id: str, payload: Dict[str, Any]) -> None:
+        hardware_info = detect_system_hardware()
         res = make_result_message(
             request_id,
             {
@@ -81,6 +90,7 @@ class EngineWorker:
                 "uptime_seconds": time.monotonic(),
                 "initialized": self.initialized,
                 "pid": os.getpid(),
+                "hardware": hardware_info,
             },
         )
         self.send_message(res)
