@@ -25,7 +25,10 @@ const config: Config = {
         border: "var(--border)",
       },
       fontFamily: {
-        sans: ["Vazirmatn", "system-ui", "-apple-system", "sans-serif"],
+        sans: ["Dana", "Peyda", "Vazirmatn", "system-ui", "-apple-system", "sans-serif"],
+        dana: ["Dana", "sans-serif"],
+        peyda: ["Peyda", "sans-serif"],
+        rokh: ["Rokh", "sans-serif"],
       },
     },
   },
