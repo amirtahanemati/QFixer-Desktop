@@ -1,6 +1,6 @@
 [package]
 name = "qfixer-desktop"
-version = "0.1.0"
+version = "1.0.0"
 description = "QFixer Desktop Native Core"
 authors = ["QFixer Team"]
 edition = "2021"
