@@ -3,6 +3,10 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { StatusBar } from "@/components/StatusBar";
 import { HomePage } from "@/pages/HomePage";
+import { WorkspacePage } from "@/pages/WorkspacePage";
+import { BatchPage } from "@/pages/BatchPage";
+import { HistoryPage } from "@/pages/HistoryPage";
+import { SettingsPage } from "@/pages/SettingsPage";
 import { useAppStore } from "@/stores/appStore";
 
 export const App: React.FC = () => {
@@ -23,11 +27,10 @@ export const App: React.FC = () => {
         <Sidebar />
         <main className="flex-1 flex flex-col overflow-hidden bg-background">
           {currentPage === "home" && <HomePage />}
-          {currentPage !== "home" && (
-            <div className="flex-1 flex items-center justify-center text-muted-foreground text-sm">
-              بخش {currentPage} در فازهای بعدی فعال خواهد شد.
-            </div>
-          )}
+          {currentPage === "workspace" && <WorkspacePage />}
+          {currentPage === "batch" && <BatchPage />}
+          {currentPage === "history" && <HistoryPage />}
+          {currentPage === "settings" && <SettingsPage />}
         </main>
       </div>
       <StatusBar />

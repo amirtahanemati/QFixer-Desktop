@@ -1,7 +1,9 @@
 {
   "app": {
     "title": "QFixer Desktop",
-    "tagline": "Specialized Scientific & Educational Image Restoration"
+    "tagline": "Specialized Scientific & Educational Image Restoration",
+    "version": "v0.1.0 (Architecture Preview)",
+    "offline_active": "Fully Offline Mode Active"
   },
   "nav": {
     "home": "Home",
@@ -15,20 +17,150 @@
     "processing": "Processing...",
     "idle": "Idle",
     "hardware": "Hardware:",
-    "engine": "Engine:"
+    "engine": "Engine:",
+    "backend_cpu": "Multi-core CPU",
+    "backend_gpu": "NVIDIA GPU (CUDA)",
+    "engine_version": "Python CV Worker (Protocol v2.0)",
+    "zoom": "Zoom:",
+    "cursor_pos": "Coords:"
   },
   "actions": {
     "import_image": "Import Image",
+    "import_folder": "Select Folder",
     "export_image": "Export Image",
     "cancel": "Cancel",
     "reset": "Reset",
     "apply": "Apply Changes",
     "toggle_theme": "Toggle Theme",
-    "switch_lang": "Switch Language"
+    "switch_lang": "Switch Language",
+    "open_workspace": "Open Workspace",
+    "undo": "Undo",
+    "redo": "Redo",
+    "fit_to_screen": "Fit to Screen",
+    "actual_size": "Actual Size (100%)",
+    "fullscreen": "Fullscreen",
+    "save_project": "Save Project",
+    "start_batch": "Start Batch",
+    "stop_batch": "Stop Queue",
+    "clear_history": "Clear History",
+    "save_settings": "Save Settings"
   },
-  "phase0": {
-    "badge": "Phase 0: Base Infrastructure",
-    "status_title": "QFixer Desktop skeleton initialized successfully",
-    "status_desc": "i18n, Dark/Light tokens, modular architecture, and IPC contracts are configured."
+  "home": {
+    "quick_start": "Quick Start",
+    "dropzone_title": "Drag and drop educational images or browse",
+    "dropzone_desc": "Supports PNG, JPG, JPEG, TIFF, BMP, and WEBP up to 50MB",
+    "recent_projects": "Recent Projects",
+    "no_recent_projects": "No recent projects found.",
+    "recent_images": "Recently Processed Images",
+    "system_overview": "System & Hardware Overview",
+    "stat_processed": "Images Processed",
+    "stat_success_rate": "Content Preservation Rate",
+    "stat_avg_time": "Average Processing Time",
+    "models_installed": "Installed Local Models",
+    "hardware_detected": "Hardware Detection Status",
+    "features_title": "Core Scientific Features",
+    "feature_protect": "Strict Scientific Preservation",
+    "feature_protect_desc": "Multi-layer protection masks prevent loss of text, formulas, exponents, fractions, roots, and diagrams.",
+    "feature_shadow": "Shadow & Uneven Lighting Removal",
+    "feature_shadow_desc": "Intelligent background estimation removes scan and mobile camera shadows without damaging dark ink strokes.",
+    "feature_offline": "100% Offline & Private",
+    "feature_offline_desc": "No data is sent to the internet or external servers; all processing runs locally on your machine."
+  },
+  "workspace": {
+    "toolbar": {
+      "select": "Select",
+      "pan": "Pan",
+      "zoom_in": "Zoom In (+)",
+      "zoom_out": "Zoom Out (-)",
+      "fit": "Fit Size",
+      "original": "Original Size",
+      "compare_split": "Split Slider",
+      "compare_side": "Side-by-Side",
+      "compare_overlay": "Overlay",
+      "mask_editor": "Mask Editor"
+    },
+    "tool_groups": {
+      "basic": "Basic Enhancement",
+      "cleanup": "Cleanup",
+      "restoration": "Restoration",
+      "protection": "Content Protection",
+      "advanced": "Advanced"
+    },
+    "params": {
+      "panel_title": "Processing Parameters",
+      "auto_enhance": "Auto Intelligent Enhance",
+      "brightness": "Brightness",
+      "contrast": "Contrast",
+      "exposure": "Exposure",
+      "shadow_removal": "Shadow Removal Strength",
+      "noise_removal": "Noise & Spot Reduction",
+      "background_cleaning": "Paper Background Cleaning",
+      "protect_text": "Protect Text & Glyphs",
+      "protect_formulas": "Protect Math Formulas & Symbols",
+      "protect_diagrams": "Protect Diagrams & Geometry",
+      "protect_colors": "Preserve Meaningful Colors",
+      "sharpening": "Edge & Line Sharpening",
+      "confidence": "Analysis Confidence",
+      "manual_review_warning": "Ambiguous spots are preserved untouched for manual user review."
+    },
+    "viewport": {
+      "empty_title": "No Image Loaded",
+      "empty_desc": "To start, import an image from the top toolbar or drag & drop a file here.",
+      "before": "Original (Before)",
+      "after": "Processed (After)",
+      "mask_active": "Mask Layer Active"
+    }
+  },
+  "batch": {
+    "title": "Batch Image Processing",
+    "desc": "Process a collection of exam sheets, book pages, or handouts simultaneously with unified parameters and memory control.",
+    "add_files": "Add Images",
+    "add_folder": "Add Folder",
+    "queue_count": "In Queue: {{count}} images",
+    "queue_empty": "Processing queue is empty. Please add images to begin.",
+    "output_dir": "Output Directory:",
+    "browse": "Browse...",
+    "concurrency": "Concurrency:",
+    "threads": "{{count}} Parallel Threads",
+    "col_name": "File Name",
+    "col_size": "Dimensions / Size",
+    "col_status": "Status",
+    "col_actions": "Actions",
+    "status_waiting": "Waiting",
+    "status_processing": "Processing",
+    "status_completed": "Completed",
+    "status_error": "Error"
+  },
+  "history": {
+    "title": "Processing History & Projects",
+    "desc": "Inspect complete processing logs, statistical metrics, and restore previous results.",
+    "search_placeholder": "Search history by filename or date...",
+    "empty": "No history records found.",
+    "col_date": "Date & Time",
+    "col_image": "Image",
+    "col_operations": "Applied Operations",
+    "col_hardware": "Hardware",
+    "col_duration": "Duration",
+    "reopen": "Re-open"
+  },
+  "settings": {
+    "title": "Application Settings",
+    "desc": "Manage display preferences, hardware configuration, engine parameters, and scratch storage.",
+    "appearance": "Appearance & Language",
+    "language_label": "UI Language:",
+    "theme_label": "App Theme:",
+    "theme_dark": "Dark (Default)",
+    "theme_light": "Light",
+    "hardware_tab": "Hardware Configuration",
+    "hardware_mode": "Processing Hardware:",
+    "auto_detect": "Auto Detect (Recommended)",
+    "force_cpu": "CPU Only (Multi-core)",
+    "force_gpu": "GPU Acceleration (CUDA)",
+    "tiling_threshold": "Large Image Tiling Threshold:",
+    "storage_tab": "Storage & Scratch",
+    "cache_dir": "Temporary Cache Directory:",
+    "clear_cache": "Clear Cache",
+    "about_tab": "About QFixer",
+    "about_desc": "Developed as a specialized offline solution for restoring and enhancing educational documents and exam figures."
   }
 }
