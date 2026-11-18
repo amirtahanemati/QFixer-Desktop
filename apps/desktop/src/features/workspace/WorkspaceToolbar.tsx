@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useWorkspaceStore } from "@/stores/workspaceStore";
 import { Button } from "@/components/ui/button";
 import { ExportDialog } from "./ExportDialog";
@@ -8,52 +7,55 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize2,
-  Undo2,
-  Redo2,
   SplitSquareVertical,
   Columns,
-  Layers,
+  Eye,
   Download,
   FolderOpen,
-  MousePointer,
-  Hand,
   Paintbrush,
+  Image as ImageIcon,
 } from "lucide-react";
 
-export const WorkspaceToolbar: React.FC = () => {
-  const { t } = useTranslation("common");
+interface WorkspaceToolbarProps {
+  onNewImageSelected?: () => void;
+}
+
+export const WorkspaceToolbar: React.FC<WorkspaceToolbarProps> = () => {
   const {
+    currentImage,
+    imageDimensions,
     zoomLevel,
     zoomIn,
     zoomOut,
     resetZoom,
     viewMode,
     setViewMode,
-    activeTool,
-    setActiveTool,
     setCurrentImage,
   } = useWorkspaceStore();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isMaskModalOpen, setIsMaskModalOpen] = useState(false);
-  const { currentImage } = useWorkspaceStore();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      const objectUrl = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => {
-        setCurrentImage(objectUrl, { width: img.naturalWidth, height: img.naturalHeight });
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const dataUrl = ev.target?.result as string;
+        const img = new Image();
+        img.onload = () => {
+          setCurrentImage(dataUrl, { width: img.naturalWidth, height: img.naturalHeight });
+        };
+        img.src = dataUrl;
       };
-      img.src = objectUrl;
+      reader.readAsDataURL(file);
     }
   };
 
   return (
     <>
-      <div className="h-11 border-b border-border bg-background-secondary px-3 flex items-center justify-between gap-2 select-none">
+      <div className="h-12 border-b border-border bg-background px-4 flex items-center justify-between gap-3 select-none">
         {/* Hidden File Input */}
         <input
           ref={fileInputRef}
@@ -63,128 +65,130 @@ export const WorkspaceToolbar: React.FC = () => {
           onChange={handleFileChange}
         />
 
-        {/* File & History Actions */}
-        <div className="flex items-center gap-1">
+        {/* Left Section: Image Change & Dimensions */}
+        <div className="flex items-center gap-3">
           <Button
-            variant="secondary"
+            variant="outline"
             size="sm"
             onClick={() => fileInputRef.current?.click()}
-            title={t("actions.import_image")}
+            className="gap-2 text-xs font-semibold"
           >
             <FolderOpen className="w-3.5 h-3.5 text-accent" />
-            <span className="hidden sm:inline">{t("actions.import_image")}</span>
+            <span>انتخاب تصویر جدید</span>
           </Button>
 
-          <div className="h-4 w-px bg-border mx-1" />
-
-          <Button variant="ghost" size="icon" title={t("actions.undo")}>
-            <Undo2 className="w-3.5 h-3.5" />
-          </Button>
-          <Button variant="ghost" size="icon" title={t("actions.redo")}>
-            <Redo2 className="w-3.5 h-3.5" />
-          </Button>
+          {imageDimensions && (
+            <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-panel border border-border text-[11px] text-muted-foreground font-mono">
+              <ImageIcon className="w-3 h-3 text-accent" />
+              <span>{imageDimensions.width} × {imageDimensions.height}</span>
+            </div>
+          )}
         </div>
 
-        {/* Navigation & Selection Tools */}
-        <div className="flex items-center gap-1 bg-panel/70 p-0.5 rounded-lg border border-border">
-          <Button
-            variant={activeTool === "select" ? "accent" : "ghost"}
-            size="icon"
-            onClick={() => setActiveTool("select")}
-            title={t("workspace.toolbar.select")}
+        {/* Center: Comparison View Mode Tabs */}
+        <div className="flex items-center gap-1 bg-panel p-1 rounded-lg border border-border text-xs">
+          <button
+            onClick={() => setViewMode("slider")}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition font-medium ${
+              viewMode === "slider"
+                ? "bg-accent text-background-primary shadow-sm font-semibold"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
           >
-            <MousePointer className="w-3.5 h-3.5" />
-          </Button>
-          <Button
-            variant={activeTool === "pan" ? "accent" : "ghost"}
-            size="icon"
-            onClick={() => setActiveTool("pan")}
-            title={t("workspace.toolbar.pan")}
+            <SplitSquareVertical className="w-3.5 h-3.5" />
+            <span>اسلایدر قبل و بعد</span>
+          </button>
+
+          <button
+            onClick={() => setViewMode("side_by_side")}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition font-medium ${
+              viewMode === "side_by_side"
+                ? "bg-accent text-background-primary shadow-sm font-semibold"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
           >
-            <Hand className="w-3.5 h-3.5" />
-          </Button>
+            <Columns className="w-3.5 h-3.5" />
+            <span>کنار هم</span>
+          </button>
+
+          <button
+            onClick={() => setViewMode("overlay")}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md transition font-medium ${
+              viewMode === "overlay"
+                ? "bg-accent text-background-primary shadow-sm font-semibold"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span>فقط نتیجه</span>
+          </button>
+        </div>
+
+        {/* Right Section: Navigation & Tools & Export */}
+        <div className="flex items-center gap-2">
+          {/* Mask Editor Button */}
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setIsMaskModalOpen(true)}
             disabled={!currentImage}
-            title="ویرایشگر ماسک و پاک‌سازی دستی لکه"
-            className="gap-1.5 text-xs text-red-400 hover:text-red-300"
+            title="ویرایشگر ماسک برای حذف لکه‌های خاص"
+            className="gap-1.5 text-xs text-rose-400 hover:text-rose-300 hover:bg-rose-500/10"
           >
             <Paintbrush className="w-3.5 h-3.5" />
-            <span className="hidden xl:inline">ماسک لکه</span>
+            <span className="hidden lg:inline">حذف دستی لکه</span>
           </Button>
-        </div>
 
-        {/* Zoom Controls */}
-        <div className="flex items-center gap-1.5 bg-panel/70 px-2 py-0.5 rounded-lg border border-border text-xs">
-          <Button variant="ghost" size="icon" onClick={zoomOut} title={t("workspace.toolbar.zoom_out")}>
-            <ZoomOut className="w-3.5 h-3.5" />
-          </Button>
-          <span className="font-mono text-xs w-12 text-center text-foreground font-medium">
-            {zoomLevel}%
-          </span>
-          <Button variant="ghost" size="icon" onClick={zoomIn} title={t("workspace.toolbar.zoom_in")}>
-            <ZoomIn className="w-3.5 h-3.5" />
-          </Button>
-          <Button variant="ghost" size="icon" onClick={resetZoom} title={t("workspace.toolbar.fit")}>
-            <Maximize2 className="w-3.5 h-3.5" />
-          </Button>
-        </div>
+          {/* Zoom Controls */}
+          <div className="flex items-center gap-1 bg-panel px-2 py-0.5 rounded-lg border border-border text-xs">
+            <button
+              onClick={zoomOut}
+              className="p-1 hover:text-accent rounded text-muted-foreground"
+              title="کوچک‌نمایی"
+            >
+              <ZoomOut className="w-3.5 h-3.5" />
+            </button>
+            <span className="font-mono text-xs w-10 text-center font-semibold text-foreground">
+              {zoomLevel}%
+            </span>
+            <button
+              onClick={zoomIn}
+              className="p-1 hover:text-accent rounded text-muted-foreground"
+              title="بزرگ‌نمایی"
+            >
+              <ZoomIn className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={resetZoom}
+              className="p-1 hover:text-accent rounded text-muted-foreground"
+              title="اندازه طبیعی"
+            >
+              <Maximize2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
 
-        {/* View & Compare Modes */}
-        <div className="flex items-center gap-1 bg-panel/70 p-0.5 rounded-lg border border-border">
-          <Button
-            variant={viewMode === "slider" ? "accent" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("slider")}
-            title={t("workspace.toolbar.compare_split")}
-          >
-            <SplitSquareVertical className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">{t("workspace.toolbar.compare_split")}</span>
-          </Button>
-          <Button
-            variant={viewMode === "side_by_side" ? "accent" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("side_by_side")}
-            title={t("workspace.toolbar.compare_side")}
-          >
-            <Columns className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">{t("workspace.toolbar.compare_side")}</span>
-          </Button>
-          <Button
-            variant={viewMode === "overlay" ? "accent" : "ghost"}
-            size="sm"
-            onClick={() => setViewMode("overlay")}
-            title={t("workspace.toolbar.compare_overlay")}
-          >
-            <Layers className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">{t("workspace.toolbar.compare_overlay")}</span>
-          </Button>
-        </div>
-
-        {/* Export Action */}
-        <div className="flex items-center gap-1">
+          {/* Direct Export Action Button */}
           <Button
             variant="accent"
             size="sm"
             onClick={() => setIsExportOpen(true)}
-            title={t("actions.export_image")}
+            disabled={!currentImage}
+            className="gap-1.5 shadow font-bold text-xs"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>{t("actions.export_image")}</span>
+            <span>ذخیره فایل</span>
           </Button>
         </div>
       </div>
 
       <ExportDialog isOpen={isExportOpen} onClose={() => setIsExportOpen(false)} />
-      
+
       <MaskEditorModal
         isOpen={isMaskModalOpen}
         onClose={() => setIsMaskModalOpen(false)}
         imageSrc={currentImage}
         onSaveMask={(maskDataUrl) => {
-          console.log("Mask generated:", maskDataUrl.length);
+          console.log("Custom stain mask captured:", maskDataUrl.length);
         }}
       />
     </>

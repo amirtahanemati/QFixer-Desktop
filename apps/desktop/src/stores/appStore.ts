@@ -18,7 +18,7 @@ interface AppState {
 export const useAppStore = create<AppState>((set, get) => ({
   theme: "dark",
   lang: "fa-IR",
-  currentPage: "home",
+  currentPage: "workspace",
   setTheme: (theme) => {
     document.documentElement.classList.remove("dark", "light");
     document.documentElement.classList.add(theme);
