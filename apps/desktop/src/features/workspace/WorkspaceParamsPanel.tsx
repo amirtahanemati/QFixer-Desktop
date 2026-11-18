@@ -20,21 +20,31 @@ interface WorkspaceParamsPanelProps {
 export const WorkspaceParamsPanel: React.FC<WorkspaceParamsPanelProps> = ({ onExportClick }) => {
   const { params, setParam, resetParams, currentImage } = useWorkspaceStore();
 
-  const handleApplyPreset = (preset: "heavy_shadow" | "light_scan" | "formula_boost") => {
+  const handleApplyPreset = (preset: "heavy_shadow" | "light_scan" | "formula_boost" | "destripe") => {
     if (preset === "heavy_shadow") {
-      setParam("shadowRemoval", 90);
-      setParam("backgroundCleaning", 80);
-      setParam("contrast", 40);
+      setParam("shadowRemoval", 95);
+      setParam("backgroundCleaning", 90);
+      setParam("noiseRemoval", 70);
+      setParam("contrast", 50);
       setParam("sharpening", 35);
+    } else if (preset === "destripe") {
+      // Specifically for scanline noise, stripes and rough paper
+      setParam("shadowRemoval", 90);
+      setParam("backgroundCleaning", 95);
+      setParam("noiseRemoval", 90);
+      setParam("contrast", 65);
+      setParam("sharpening", 40);
     } else if (preset === "light_scan") {
-      setParam("shadowRemoval", 50);
-      setParam("backgroundCleaning", 45);
-      setParam("contrast", 20);
+      setParam("shadowRemoval", 60);
+      setParam("backgroundCleaning", 60);
+      setParam("noiseRemoval", 40);
+      setParam("contrast", 30);
       setParam("sharpening", 20);
     } else if (preset === "formula_boost") {
-      setParam("shadowRemoval", 70);
-      setParam("backgroundCleaning", 65);
-      setParam("contrast", 75);
+      setParam("shadowRemoval", 80);
+      setParam("backgroundCleaning", 80);
+      setParam("noiseRemoval", 60);
+      setParam("contrast", 80);
       setParam("sharpening", 50);
       setParam("protectFormulas", true);
     }
@@ -57,34 +67,40 @@ export const WorkspaceParamsPanel: React.FC<WorkspaceParamsPanelProps> = ({ onEx
       </div>
 
       {/* Scrollable Control Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-6">
+      <div className="flex-1 overflow-y-auto p-4 space-y-5">
         {/* Quick Presets */}
         <div className="space-y-1.5">
           <span className="text-[11px] font-semibold text-muted-foreground">حالت‌های بهینه‌سازی سریع:</span>
-          <div className="grid grid-cols-3 gap-1.5">
+          <div className="grid grid-cols-2 gap-1.5">
+            <button
+              onClick={() => handleApplyPreset("destripe")}
+              className="px-2 py-2 rounded-lg bg-accent/15 hover:bg-accent/25 border border-accent/40 text-[11px] text-accent font-bold transition text-center shadow-xs"
+            >
+              پاک‌سازی خطوط نویز اسکن
+            </button>
             <button
               onClick={() => handleApplyPreset("heavy_shadow")}
-              className="px-2 py-1.5 rounded-lg bg-panel hover:bg-accent/15 border border-border hover:border-accent/40 text-[10px] text-foreground font-medium transition text-center"
+              className="px-2 py-2 rounded-lg bg-panel hover:bg-accent/15 border border-border hover:border-accent/40 text-[11px] text-foreground font-medium transition text-center"
             >
               سایه غلیظ موبایل
             </button>
             <button
-              onClick={() => handleApplyPreset("light_scan")}
-              className="px-2 py-1.5 rounded-lg bg-panel hover:bg-accent/15 border border-border hover:border-accent/40 text-[10px] text-foreground font-medium transition text-center"
+              onClick={() => handleApplyPreset("formula_boost")}
+              className="px-2 py-2 rounded-lg bg-panel hover:bg-accent/15 border border-border hover:border-accent/40 text-[11px] text-foreground font-medium transition text-center"
             >
-              اسکن کتاب
+              سؤال ریاضی و کنکور
             </button>
             <button
-              onClick={() => handleApplyPreset("formula_boost")}
-              className="px-2 py-1.5 rounded-lg bg-panel hover:bg-accent/15 border border-border hover:border-accent/40 text-[10px] text-foreground font-medium transition text-center"
+              onClick={() => handleApplyPreset("light_scan")}
+              className="px-2 py-2 rounded-lg bg-panel hover:bg-accent/15 border border-border hover:border-accent/40 text-[11px] text-foreground font-medium transition text-center"
             >
-              فرمول ریاضی
+              اسکن ملایم کتاب
             </button>
           </div>
         </div>
 
         {/* Section 1: Shadow & Illumination */}
-        <div className="space-y-4 bg-panel/40 p-3.5 rounded-xl border border-border/60">
+        <div className="space-y-3.5 bg-panel/40 p-3.5 rounded-xl border border-border/60">
           <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
             <Sun className="w-3.5 h-3.5 text-accent" />
             <span>حذف سایه و اصلاح نور</span>
@@ -103,9 +119,6 @@ export const WorkspaceParamsPanel: React.FC<WorkspaceParamsPanelProps> = ({ onEx
               value={params.shadowRemoval}
               onChange={(val) => setParam("shadowRemoval", val)}
             />
-            <p className="text-[10px] text-muted-foreground">
-              سایه‌های تیره دست یا تاخوردگی برگه را محو و نور را صاف می‌کند.
-            </p>
           </div>
 
           {/* Background Whitening Slider */}
@@ -122,13 +135,31 @@ export const WorkspaceParamsPanel: React.FC<WorkspaceParamsPanelProps> = ({ onEx
               onChange={(val) => setParam("backgroundCleaning", val)}
             />
             <p className="text-[10px] text-muted-foreground">
-              تیرگی و زردی کاغذ کاهی را به سفیدی خالص کتاب تبدیل می‌کند.
+              سایه‌ها و تیرگی زمینه را به سفیدی خالص کتاب تبدیل می‌کند.
+            </p>
+          </div>
+
+          {/* Noise & Scanlines Removal Slider */}
+          <div className="space-y-1.5 pt-2 border-t border-border/40">
+            <div className="flex justify-between text-xs">
+              <span className="text-muted-foreground">حذف خطوط نویز اسکن و دانه‌ها:</span>
+              <span className="font-mono text-accent font-semibold">{params.noiseRemoval}%</span>
+            </div>
+            <Slider
+              min={0}
+              max={100}
+              step={1}
+              value={params.noiseRemoval}
+              onChange={(val) => setParam("noiseRemoval", val)}
+            />
+            <p className="text-[10px] text-muted-foreground">
+              خطوط عمودی اسکنر و دانه‌های پارازیت را محو می‌کند.
             </p>
           </div>
         </div>
 
         {/* Section 2: Ink Contrast & Sharpness */}
-        <div className="space-y-4 bg-panel/40 p-3.5 rounded-xl border border-border/60">
+        <div className="space-y-3.5 bg-panel/40 p-3.5 rounded-xl border border-border/60">
           <div className="flex items-center gap-1.5 text-xs font-bold text-foreground">
             <PenTool className="w-3.5 h-3.5 text-accent" />
             <span>وضوح و تیرگی نوشته‌ها</span>
@@ -172,7 +203,6 @@ export const WorkspaceParamsPanel: React.FC<WorkspaceParamsPanelProps> = ({ onEx
             <span>حفاظت از محتوای علمی</span>
           </div>
 
-          {/* Protect Formulas & Diacritics */}
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <span className="text-xs font-medium text-foreground">حفظ خطوط کسری، رادیکال و اعشار</span>
@@ -184,7 +214,6 @@ export const WorkspaceParamsPanel: React.FC<WorkspaceParamsPanelProps> = ({ onEx
             />
           </div>
 
-          {/* Protect Diagram Colors */}
           <div className="flex items-center justify-between pt-2 border-t border-border/40">
             <div className="space-y-0.5">
               <div className="flex items-center gap-1">

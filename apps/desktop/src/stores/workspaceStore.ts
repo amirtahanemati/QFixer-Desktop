@@ -46,16 +46,16 @@ interface WorkspaceState {
 const defaultParams: WorkspaceParams = {
   autoEnhance: true,
   brightness: 0,
-  contrast: 15,
+  contrast: 50,
   exposure: 0,
-  shadowRemoval: 60,
-  noiseRemoval: 35,
-  backgroundCleaning: 50,
+  shadowRemoval: 80,
+  noiseRemoval: 60,
+  backgroundCleaning: 85,
   protectText: true,
   protectFormulas: true,
   protectDiagrams: true,
   protectColors: true,
-  sharpening: 25,
+  sharpening: 30,
 };
 
 export const useWorkspaceStore = create<WorkspaceState>((set) => ({
