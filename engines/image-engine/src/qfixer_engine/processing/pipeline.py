@@ -9,6 +9,8 @@ from qfixer_engine.processing.noise_removal import remove_noise
 from qfixer_engine.processing.lighting import adjust_brightness_contrast, apply_clahe
 from qfixer_engine.processing.sharpening import sharpen_image
 from qfixer_engine.protection.protection_mask import create_protection_masks, apply_protected_blend
+from qfixer_engine.restoration.watermark import remove_watermark
+from qfixer_engine.restoration.inpainting import inpaint_region
 
 
 def execute_pipeline(
@@ -40,6 +42,16 @@ def execute_pipeline(
             preserve_text=protect_text,
         )
         protection_mask = masks["combined"]
+
+    # Optional: Manual Custom Mask Inpainting (e.g. stains, stamps selected by user)
+    manual_mask = options.get("manual_mask", None)
+    if manual_mask is not None and isinstance(manual_mask, np.ndarray):
+        result = inpaint_region(result, manual_mask, method="telea", radius=2)
+
+    # Optional: Automated Watermark & Stamp Removal
+    if options.get("remove_watermark", False):
+        wm_sensitivity = options.get("watermark_sensitivity", 50) / 100.0
+        result, _ = remove_watermark(result, sensitivity=wm_sensitivity, method="telea")
 
     # 1. Shadow Removal
     shadow_strength = options.get("shadow_removal", 50) / 100.0

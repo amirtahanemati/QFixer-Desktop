@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useWorkspaceStore } from "@/stores/workspaceStore";
 import { Button } from "@/components/ui/button";
 import { ExportDialog } from "./ExportDialog";
+import { MaskEditorModal } from "../masks/MaskEditorModal";
 import {
   ZoomIn,
   ZoomOut,
@@ -16,6 +17,7 @@ import {
   FolderOpen,
   MousePointer,
   Hand,
+  Paintbrush,
 } from "lucide-react";
 
 export const WorkspaceToolbar: React.FC = () => {
@@ -34,6 +36,8 @@ export const WorkspaceToolbar: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isExportOpen, setIsExportOpen] = useState(false);
+  const [isMaskModalOpen, setIsMaskModalOpen] = useState(false);
+  const { currentImage } = useWorkspaceStore();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -99,6 +103,17 @@ export const WorkspaceToolbar: React.FC = () => {
           >
             <Hand className="w-3.5 h-3.5" />
           </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsMaskModalOpen(true)}
+            disabled={!currentImage}
+            title="ویرایشگر ماسک و پاک‌سازی دستی لکه"
+            className="gap-1.5 text-xs text-red-400 hover:text-red-300"
+          >
+            <Paintbrush className="w-3.5 h-3.5" />
+            <span className="hidden xl:inline">ماسک لکه</span>
+          </Button>
         </div>
 
         {/* Zoom Controls */}
@@ -163,6 +178,15 @@ export const WorkspaceToolbar: React.FC = () => {
       </div>
 
       <ExportDialog isOpen={isExportOpen} onClose={() => setIsExportOpen(false)} />
+      
+      <MaskEditorModal
+        isOpen={isMaskModalOpen}
+        onClose={() => setIsMaskModalOpen(false)}
+        imageSrc={currentImage}
+        onSaveMask={(maskDataUrl) => {
+          console.log("Mask generated:", maskDataUrl.length);
+        }}
+      />
     </>
   );
 };
