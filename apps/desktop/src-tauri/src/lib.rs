@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod worker_manager;
 
 pub use qfixer_contracts::{
     system_health_status, HealthPayload, IpcMessage, ProgressPayload, PROTOCOL_VERSION,
