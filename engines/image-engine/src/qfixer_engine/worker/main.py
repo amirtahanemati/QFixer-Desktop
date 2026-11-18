@@ -25,6 +25,9 @@ from qfixer_engine.processing.pipeline import execute_pipeline
 from qfixer_engine.analysis.content_detector import analyze_scientific_content
 from qfixer_engine.hardware.detector import detect_system_hardware
 from qfixer_engine.ai.onnx_runner import ModelRegistryManager
+from qfixer_engine.protection.protection_mask import create_protection_masks
+from qfixer_engine.quality.evaluator import evaluate_restoration_quality
+from qfixer_engine.batch.batch_runner import process_batch_files
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("qfixer_worker")
@@ -197,6 +200,27 @@ class EngineWorker:
         )
         self.send_message(res)
 
+    def handle_batch_process(self, request_id: str, payload: Dict[str, Any]) -> None:
+        items = payload.get("items", [])
+        options = payload.get("options", {})
+
+        def progress_cb(current, total, status, details):
+            pct = int((current / max(total, 1)) * 100)
+            self.send_progress(request_id, pct, f"پردازش تصویر {current} از {total} ({status})")
+
+        def cancel_check():
+            return request_id in self.cancelled_requests
+
+        summary = process_batch_files(
+            items,
+            options,
+            progress_callback=progress_cb,
+            cancel_check=cancel_check,
+        )
+
+        res = make_result_message(request_id, summary)
+        self.send_message(res)
+
     def run_event_loop(self) -> None:
         """Main loop: read line-by-line from standard input."""
         for line in sys.stdin:
@@ -226,6 +250,8 @@ class EngineWorker:
                     self.handle_analyze_image(req_id, payload)
                 elif t == "process_image":
                     self.handle_process_image(req_id, payload)
+                elif t == "batch_process":
+                    self.handle_batch_process(req_id, payload)
                 else:
                     self.send_message(
                         make_error_message(req_id, "UNKNOWN_COMMAND", f"Unsupported command type: {t}")
