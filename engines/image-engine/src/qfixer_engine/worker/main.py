@@ -22,6 +22,7 @@ from qfixer_engine.worker.protocol import (
 )
 import cv2
 from qfixer_engine.processing.pipeline import execute_pipeline
+from qfixer_engine.analysis.content_detector import analyze_scientific_content
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("qfixer_worker")
@@ -97,11 +98,14 @@ class EngineWorker:
             self.send_message(make_error_message(request_id, "FILE_NOT_FOUND", f"Image not found: {input_path}"))
             return
 
-        self.send_progress(request_id, 20, "تحلیل فرمت و ساختار تصویر...")
-        time.sleep(0.05)
+        self.send_progress(request_id, 20, "تحلیل فرمت و بارگذاری ساختار تصویر...")
+        img = cv2.imread(input_path)
+        if img is None:
+            self.send_message(make_error_message(request_id, "IMAGE_DECODE_ERROR", f"Could not decode image at {input_path}"))
+            return
 
         self.send_progress(request_id, 60, "تفکیک نواحی متنی، فرمول‌ها و نمودارها...")
-        time.sleep(0.05)
+        analysis = analyze_scientific_content(img)
 
         self.send_progress(request_id, 100, "تحلیل محتوا با موفقیت پایان یافت.")
 
@@ -110,11 +114,13 @@ class EngineWorker:
             {
                 "input_path": input_path,
                 "features_detected": {
-                    "text_regions_count": 28,
-                    "formulas_count": 6,
-                    "diagrams_count": 2,
+                    "text_regions_count": analysis["counts"]["text"],
+                    "formulas_count": analysis["counts"]["formula"],
+                    "diagrams_count": analysis["counts"]["diagram"],
+                    "noise_components_count": analysis["counts"]["noise"],
+                    "total_components": analysis["total_components"],
+                    "dimensions": analysis["image_dimensions"],
                     "shadow_detected": True,
-                    "noise_level": 0.18,
                 },
                 "protection_masks_ready": True,
             },
